@@ -12,7 +12,7 @@
 void main(void){
 
 
-
+	// Lägger in en lite comment.. k
 	List *test = ListInitialize();
 	listobj *a = (listobj *)calloc(1, sizeof(listobj));
 	int i;
