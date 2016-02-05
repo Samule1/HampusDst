@@ -66,33 +66,6 @@ int testNTCNTOrder(List* ls){
 	return 1; 
 }
 
-int firsIsFirst(List * ls){
-	listobj * node = ls->head->pNext; 
-	listobj * cmp; 
-	listobj * fetchedNode; 
-	listobj * prevState;
-	while (node->pNext != NULL){
-		cmp = node->pNext; 
-		prevState = ls->head->pNext; 
-		fetchedNode = getFirst(ls);
-		if (prevState != fetchedNode){
-			return 0; 
-		}
-		 else if (ls->head->pNext != cmp){
-			return 0; 
-
-		}
-		node = node->pNext; 
-	}
-	/*Omringar returnen med en emoty check här..*/
-
-	if (isListEmpty(ls) != 1){
-		return 0; 
-	}
-
-	return 1; 
-
-}
 
 int testGetWhenListIsone(List * ls){
 	listobj * node = getFirst(ls);
@@ -127,17 +100,17 @@ int testDeadlineSorting(List * ls){
 
 
 }
-
+//Byter från 20 till 6 för att kolla. 
 List * randomTwentyTCnt(){
 	int i;
 	int nRandomTCnt;
 	int nRandomTCBDeadline;
-	listobj * nodes[20];
+	listobj * nodes[6];
 	listobj * node;
 	TCB * tcb;
 	List * ls;
 	srand(time(NULL));
-	for (i = 0; i < 20; i++){
+	for (i = 0; i < 6; i++){
 		node = (listobj *)calloc(1, sizeof(listobj));
 		tcb = (TCB *)calloc(1, sizeof(TCB));
 		nRandomTCnt = (rand() % 20) + 1;
@@ -151,7 +124,7 @@ List * randomTwentyTCnt(){
 	}
 	ls = ListInitialize();
 
-	for (i = 0; i < 20; i++){
+	for (i = 0; i < 6; i++){
 		insertonTCnt(nodes[i], ls);
 	}
 	return ls;
@@ -192,4 +165,80 @@ List * randomTwentyDeadline(){
 
 };
 
+int freeNodeIsFree(listobj * node){
+	freeThis(node);
+	if (node->pNext != NULL || node->pPrevious != NULL){
+		return 0;
+
+	}
+	else{
+
+		return 1;
+	}
+
+}
+
+
+
+int sizecheckAfterFree(List * ls){
+	
+	int nodeIndex = (rand() % 10) + 1;
+	listobj * node = nodeAtindex(ls, nodeIndex);
+	int firstCount = 0;
+	int afterCount = 0; 
+	listobj * temp = ls->head->pNext;
+
+	while (temp->pNext != NULL){
+		firstCount++; 
+		temp = temp->pNext;
+	}
+
+	freeThis(node); 
+	temp = ls->head->pNext; 
+
+
+	while (temp->pNext != NULL){
+		afterCount++; 
+		temp = temp->pNext;
+	}
+
+	if (afterCount != (firstCount - 1)){
+		return 0;
+	}
+	else {
+		return 1; 
+	}
+	
+
+}
+int testPreviousnTCnt(List * ls){
+	listobj * node = ls->tail->pPrevious; 
+	while (node->pPrevious != NULL){
+		if (node->nTCnt < node->pPrevious->nTCnt){
+			return 0; 
+		}
+		node = node->pPrevious; 
+
+	}
+	return 1; 
+
+}
+
+int testPreviousnDeadline(List * ls){
+	listobj * node = ls->tail->pPrevious;
+	int s = 0;
+	while (node->pPrevious != ls->head->pNext){
+	
+		if (node->pTask->DeadLine < node->pPrevious->pTask->DeadLine){
+
+			return 0;
+		}
+		if (node == ls->head->pPrevious){
+			break;
+		}
+		node = node->pPrevious; 
+	}
+	return 1; 
+
+}
 

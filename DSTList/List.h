@@ -29,6 +29,8 @@ typedef struct List {
 
 }List;
 
+
+listobj * freeThis(listobj * node); 
 List * ListInitialize();
 void insertOnTCBDeadLine(listobj* node, List* ls);
 void insertonTCnt(listobj* node, List* ls);

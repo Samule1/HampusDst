@@ -3,12 +3,27 @@
 #include <math.h>
 #include "List.h"
 
+//Returns the current node and relinks the objects in the list. 
+
+listobj * freeThis(listobj * node){
+	node->pNext->pPrevious = node->pPrevious; 
+	node->pPrevious->pNext = node->pNext; 
+	node->pNext = NULL; 
+	node->pPrevious = NULL; 
+	return node;
+
+}
+
+
 //Hur tänker vi här? Kan ju inte gärna ligga en free här?
+
 listobj * getFirst(List * ls){
 
 	listobj * node = ls->head->pNext;
 	node->pNext->pPrevious = ls->head; 
 	ls->head->pNext = node->pNext; 
+	node->pNext = NULL; 
+	node->pPrevious = NULL; 
 	return node; 
 }
 

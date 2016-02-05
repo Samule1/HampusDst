@@ -29,15 +29,28 @@ void main(void){
 	List * empty = ListInitialize();
 	List * hmm = randomTwentyTCnt(); 
 	List * tcblist = randomTwentyDeadline();
+	List * what = randomTwentyDeadline();
+	List * backDead = randomTwentyDeadline();
+	List * backCNT = randomTwentyTCnt();
 	
+
+
+	assert(testPreviousnTCnt(backCNT));
+	assert(testPreviousnDeadline(backDead)); 
 
 	assert(testDeadlineSorting(tcblist)); 
 	assert(isListEmpty(empty)); 
 	assert(testIndexFetch());
 	assert(testNTCNTOrder(hmm));
-	assert(firsIsFirst(hmm));
+	
 	assert(testGetWhenListIsone(sizeIsOne)); 
 	assert(sortedAfterGet());
+
+	/*===========FreeTesting=========*/
+	assert(sizecheckAfterFree(what));
+	assert(testDeadlineSorting(what));
+	assert(testPreviousnDeadline(what));
+	/*===============================*/
 	
 	
 
