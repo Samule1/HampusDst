@@ -4,6 +4,45 @@
 #include <math.h>
 #include "TestLinkedList.h"
 
+
+int testMoveNodes(List * one, List * two){
+
+	int lengthBeforeMove = listLength(one);
+	moveBetweenLists(one, two); 
+	if (isListEmpty(one) != 1 || listLength(two) != lengthBeforeMove){
+
+		return 0; 
+	}
+	else
+	{
+		return 1; 
+	}
+}
+
+void moveBetweenLists(List * one, List * two){
+
+	int length = listLength(one);
+	int i; 
+	listobj * node; 
+	for (i = 0; i < length; i++){
+		node = getFirst(one); 
+		insertonTCnt(node, two); 
+	}
+
+}
+
+int listLength(List * ls){
+
+	listobj * node = ls->head->pNext; 
+	int i = 0; 
+	while (node->pNext != NULL){
+		i++; 
+		node = node->pNext; 
+
+	}
+	return i; 
+}
+
 int sortedAfterGet(){
 	List * ls = randomTwentyDeadline();
 	getFirst(ls); 
@@ -105,12 +144,12 @@ List * randomTwentyTCnt(){
 	int i;
 	int nRandomTCnt;
 	int nRandomTCBDeadline;
-	listobj * nodes[6];
+	listobj * nodes[20];
 	listobj * node;
 	TCB * tcb;
 	List * ls;
 	srand(time(NULL));
-	for (i = 0; i < 6; i++){
+	for (i = 0; i < 20; i++){
 		node = (listobj *)calloc(1, sizeof(listobj));
 		tcb = (TCB *)calloc(1, sizeof(TCB));
 		nRandomTCnt = (rand() % 20) + 1;
@@ -124,7 +163,7 @@ List * randomTwentyTCnt(){
 	}
 	ls = ListInitialize();
 
-	for (i = 0; i < 6; i++){
+	for (i = 0; i < 20; i++){
 		insertonTCnt(nodes[i], ls);
 	}
 	return ls;

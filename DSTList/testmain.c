@@ -32,6 +32,7 @@ void main(void){
 	List * what = randomTwentyDeadline();
 	List * backDead = randomTwentyDeadline();
 	List * backCNT = randomTwentyTCnt();
+	List * full = randomTwentyTCnt(); 
 	
 
 
@@ -42,6 +43,8 @@ void main(void){
 	assert(isListEmpty(empty)); 
 	assert(testIndexFetch());
 	assert(testNTCNTOrder(hmm));
+
+	assert(testMoveNodes(full, empty));
 	
 	assert(testGetWhenListIsone(sizeIsOne)); 
 	assert(sortedAfterGet());

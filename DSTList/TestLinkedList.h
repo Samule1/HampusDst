@@ -22,6 +22,9 @@
 List * randomTwentyTCnt(); 
 List * randomTwentyDeadline();
 
+//Returnernar storleken på en lista. 
+int listLength(List * ls); 
+
 //Testar om listan är tom 
 int isListEmpty(List * ls); 
 
@@ -43,5 +46,11 @@ int testDeadlineSorting(List * ls);
 //Testar kan koppla bort en nod och bevara strukturen efter åt. 
 int freeNodeIsFree(listobj * node); 
 int sizecheckAfterFree(List * ls);
+
+//Tar två stycken listor, en med 20st objekt en är tom. Alla objekt flyttas från den fulla listan till den tomma. 
+void moveBetweenLists(List * one, List * two);
+
+//Testar flytt mellan listor (använder moveBetweenLists)
+int testMoveNodes(List * one, List * two);
 
 #endif
