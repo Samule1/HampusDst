@@ -40,17 +40,19 @@ listobj * nodeAtindex(List* ls, int index){
 	
 	}
 
-
+  return NULL; 
 }
 
 List * ListInitialize(){
 	List *ptr = (List *)calloc(1,sizeof(List)); 
 	//listobj *node = (listobj *)calloc(1, sizeof(listobj));
-	
-	ptr->head = (listobj *)calloc(1, sizeof(listobj));;
-	ptr->tail = (listobj *)calloc(1, sizeof(listobj));;
+        
+	ptr->head = (listobj *)calloc(1, sizeof(listobj));
+	ptr->tail = (listobj *)calloc(1, sizeof(listobj));
 	ptr->head->pNext = ptr->tail; 
 	ptr->tail->pPrevious = ptr->head; 
+        
+        
 
 	
 

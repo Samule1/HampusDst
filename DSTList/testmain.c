@@ -12,7 +12,61 @@
 void main(void){
 
 
-	// Lägger in en lite comment.. k
+
+	List * ls = ListInitialize();
+	listobj * temp;
+
+	int nodeCount = 0;
+	int nodeCountAgain = 0;
+	while (nodeCount != 100){
+		listobj * node = (listobj *)calloc(1, sizeof(listobj));
+
+		if (node == NULL){
+			break;
+		}
+
+		node->nTCnt = 2;
+		insertonTCnt(node, ls);
+		nodeCount++;
+	}
+
+	while (ls->head->pNext->pNext->pNext != ls->tail){
+		temp = getFirst(ls);
+		free(temp);
+	}
+	while (nodeCountAgain != 100){
+		listobj * node = (listobj *)calloc(1, sizeof(listobj));
+
+		if (node == NULL){
+			break;
+		}
+
+		node->nTCnt = 2;
+		insertonTCnt(node, ls);
+		nodeCountAgain++;
+	}
+	nodeCountAgain++;
+
+	/*
+	List * ls = ListInitialize();
+	listobj * temp;
+	int nodeCount = 0;
+	int nodeCountAgain = 0;
+	while (nodeCount != 4){
+		listobj * node = (listobj *)calloc(1, sizeof(listobj));
+
+		if (node == NULL){
+			break;
+		}
+
+		node->nTCnt = 2;
+		insertonTCnt(node, ls);
+		nodeCount++;
+	}
+
+
+
+	
 	List *test = ListInitialize();
 	listobj *a = (listobj *)calloc(1, sizeof(listobj));
 	int i;
@@ -49,14 +103,14 @@ void main(void){
 	assert(testGetWhenListIsone(sizeIsOne)); 
 	assert(sortedAfterGet());
 
-	/*===========FreeTesting=========*/
+	
 	assert(sizecheckAfterFree(what));
 	assert(testDeadlineSorting(what));
 	assert(testPreviousnDeadline(what));
-	/*===============================*/
 	
 	
-
+	
+	*/
 
 
 
