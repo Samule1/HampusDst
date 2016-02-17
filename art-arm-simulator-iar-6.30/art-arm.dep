@@ -146,7 +146,7 @@
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 36 31 20 14 11 33 34 28 9 32 27 29 16</file>
+          <file> 20 36 31 14 11 33 34 28 9 32 27 29 16</file>
         </tool>
         <tool>
           <name>ICCARM</name>

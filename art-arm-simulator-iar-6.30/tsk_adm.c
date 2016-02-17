@@ -162,6 +162,47 @@ exception remove_mailbox(mailbox* mBox){
 
 
 }
+//TODO
+exception wait( uint nTicks ){
+    return NULL; 
+}
+
+void set_ticks( uint no_of_ticks ){
+  tickcounter = no_of_ticks; 
+}
+
+uint ticks( void ){
+  
+  int count = tickcounter; 
+  return count; 
+}
+
+uint deadline( void ){
+  return Running->DeadLine; 
+
+}
+//Kolla igenom detta, tror du är lite trött.. 
+void set_deadline( uint nDeadline ){
+  set_isr(ISR_OFF);
+  
+  bool first = TRUE; 
+  listobj * node;  
+  
+  SaveContext();
+  
+  if(first){
+    first = FALSE; 
+    node = getFirst(ready_list);
+    node->pTask->DeadLine = nDeadline; 
+    insertOnTCBDeadLine(node, ready_list); 
+    Running = ready_list->head->pNext->pTask; 
+    LoadContext(); 
+      
+    
+  }
+  
+
+}
 
 
 
