@@ -3,6 +3,18 @@
 #include "kernel_hwdep.h"
 #include <limits.h>
 
+/*
+                             REMINDERS
+i en subrutin där du slår på och sedan av ett interrupt ska du köra:
+int x = set_isr(ISR_OFF), do stuff, set_isr(x)
+
+
+
+
+
+
+*/
+
 
 
 void idle(void){
@@ -17,9 +29,10 @@ exception init_kernel(void){
   //Kanske kommer det mailboxes här? 
   // Running pointer. 
   
-  //skapa idle task 
+ 
    
   start_up_mode = TRUE; 
+  running_mode = FALSE; 
   tickcounter = 0; // Done manually for now.  
   
   //Creating the three fundamental listst. 
@@ -67,7 +80,7 @@ exception create_task(void(*task_body)(), uint deadline){
     return status; 
   }
   else{ 
-    set_isr(ISR_OFF);      // stänger av interrupts. 
+    set_isr(ISR_OFF);      // Behöver inte köra hacket här.. 
     SaveContext(); 
     if(first){
       first = FALSE; 
@@ -79,7 +92,76 @@ exception create_task(void(*task_body)(), uint deadline){
 	
 } 
 
+void run(void){
+  // !!!initailize interuupt timer?!!! 
+  start_up_mode = FALSE; 
+  running_mode = TRUE; 
+  
+  set_isr(ISR_ON); 
+  
+  LoadContext(); 
 
+}
+
+/*Här anatar jag att vi alltid termininerar från readylist och vi kommer ju alltid att 
+  terminera "the running task" så freeFirst ska kunna funka ganska bra här.. 
+*/
+void terminate(void){
+  //Här kan man tänka sig en check för idle.. 
+  listobj * node = getFirst(ready_list);
+  
+  //OM mailbox är kopplad hit så bör vi rimligen köra en free på den också...  
+  free(node->pTask); 
+  free(node); 
+  
+  Running = ready_list->head->pNext->pTask; 
+  LoadContext(); 
+  
+
+}
+
+
+mailbox* create_mailbox( uint nMessages, uint nDataSize ){
+  
+  mailbox * mb = (mailbox *)calloc(1, sizeof(mailbox)); 
+  if(mb == NULL){
+    free(mb); 
+    return NULL; 
+  }
+  mb->nDataSize = nDataSize; 
+  mb->nMaxMessages = nMessages; 
+  
+  mb->pHead = (msg *)calloc(1, sizeof(msg)); 
+  mb->pTail = (msg *)calloc(1, sizeof(msg)); 
+  if(mb->pHead == NULL || mb->pTail == NULL){
+     free(mb->pHead); 
+     free(mb->pTail); 
+     free(mb); 
+     return NULL; 
+  }
+  
+  mb->pHead->pNext = mb->pTail; 
+  return mb; 
+
+}
+
+exception remove_mailbox(mailbox* mBox){
+  
+  //Kollar om den är tom
+  if(mBox->pHead->pNext == mBox->pTail){
+    free(mBox->pHead); 
+    free(mBox->pTail); 
+    free(mBox); 
+    return OK; 
+  
+  }
+  else{
+    return NOT_EMPTY; 
+  }
+  
+
+
+}
 
 
 

@@ -44,8 +44,9 @@ typedef int 			action;
 
 struct  l_obj;                         // Forward declaration
 extern unsigned int tickcounter;       // Global tick counter. 
-extern int start_up_mode; 
-
+extern bool start_up_mode;             // the kernel is in start-up              
+extern bool running_mode;              // the kernel is in running-mode
+ 
 
 // Task Control Block, TCB
 #ifdef texas_dsp
@@ -68,6 +69,13 @@ typedef struct
         uint    DeadLine;
 } TCB;
 #endif
+
+
+/*************************/
+/*ANOTHER GLOBAL ONE HERE*/
+/*************************/
+extern TCB * Running;                  // Running pointer..
+
 
 // Message items
 typedef struct msgobj {
@@ -122,6 +130,7 @@ void            run( void );
 // Communication
 mailbox*	create_mailbox( uint nMessages, uint nDataSize );
 int             no_messages( mailbox* mBox );
+exception       remove_mailbox(mailbox* mBox); 
 
 exception       send_wait( mailbox* mBox, void* pData );
 exception       receive_wait( mailbox* mBox, void* pData );
