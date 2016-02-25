@@ -6,16 +6,16 @@
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$PROJ_DIR$\Debug\Obj\List.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\List.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\ymath.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\math.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
-      <file>$PROJ_DIR$\..\..\..\Documents\GitHub\HampusDst\DSTList\List.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\tsk_adm.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\tsk_adm.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\context.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\kernel_hwdep.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\art-arm.pbd</file>
+      <file>$PROJ_DIR$\Debug\Exe\art-arm.out</file>
+      <file>$TOOLKIT_DIR$\inc\c\xtgmath.h</file>
       <file>$PROJ_DIR$\kernel_hwdep.c</file>
       <file>$PROJ_DIR$\kernel.h</file>
       <file>$PROJ_DIR$\context.s79</file>
@@ -24,59 +24,70 @@
       <file>$PROJ_DIR$\List.c</file>
       <file>$PROJ_DIR$\List.h</file>
       <file>$PROJ_DIR$\tsk_adm.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\List.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\Documents\GitHub\HampusDst\DSTList\List.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\List.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
       <file>$PROJ_DIR$\..\..\..\Documents\GitHub\HampusDst\DSTList\List.c</file>
-      <file>$TOOLKIT_DIR$\config\generic.icf</file>
+      <file>$PROJ_DIR$\Debug\Obj\tsk_adm.pbi</file>
       <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\context-demo.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\limits.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\tsk_adm.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\math.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ymath.h</file>
+      <file>$TOOLKIT_DIR$\config\generic.icf</file>
       <file>$PROJ_DIR$\Debug\Obj\context-demo.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\context-demo.o</file>
       <file>$PROJ_DIR$\Debug\Obj\kernel_hwdep.o</file>
-      <file>$TOOLKIT_DIR$\lib\dl4t_aln.a</file>
       <file>$TOOLKIT_DIR$\lib\m4t_al.a</file>
+      <file>$TOOLKIT_DIR$\lib\dl4t_aln.a</file>
       <file>$TOOLKIT_DIR$\lib\shs_l.a</file>
       <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
       <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
       <file>$TOOLKIT_DIR$\lib\rt4t_al.a</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\kernel_hwdep.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\art-arm.pbd</file>
-      <file>$PROJ_DIR$\Debug\Obj\context.o</file>
-      <file>$PROJ_DIR$\Debug\Exe\art-arm.out</file>
-      <file>$TOOLKIT_DIR$\inc\c\xtgmath.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>ILINK</name>
-          <file> 39</file>
+          <file> 8</file>
         </tool>
       </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\art-arm.out</name>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 30 32 4 33 20 26 36 40 34 35</file>
+        </tool>
+      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\kernel_hwdep.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 35</file>
+          <file> 5</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 23</file>
+          <file> 33</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 36 29 27 20 28 33 31 34 32 14</file>
+          <file> 6 39 37 24 38 2 0 3 1 14</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 32 28 20 36 31 34 33 29 27 14</file>
+          <file> 1 38 24 6 0 3 2 39 37 14</file>
         </tool>
       </inputs>
     </file>
@@ -85,7 +96,7 @@
       <outputs>
         <tool>
           <name>AARM</name>
-          <file> 38</file>
+          <file> 4</file>
         </tool>
       </outputs>
     </file>
@@ -94,21 +105,21 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 22</file>
+          <file> 31</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 21</file>
+          <file> 32</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 20 36 31 33 34 28 16 32 27 29 11</file>
+          <file> 39 38 37 16 1 24 2 6 0 11 3</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 11 32 28 20 36 31 34 33 29 27 16</file>
+          <file> 11 1 38 24 6 0 3 2 39 37 16</file>
         </tool>
       </inputs>
     </file>
@@ -117,21 +128,21 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 1</file>
+          <file> 18</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 0</file>
+          <file> 20</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 36 28 40 31 4 27 33 34 32 16 20 5 29 2 3 11</file>
+          <file> 6 38 9 0 28 37 2 3 1 16 24 27 39 29 21 11</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 3 28 20 36 31 34 33 29 27 5 32 4 2 40 16 11</file>
+          <file> 21 38 24 6 0 3 2 39 37 27 1 28 29 9 16 11</file>
         </tool>
       </inputs>
     </file>
@@ -140,17 +151,21 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 7</file>
+          <file> 23</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 26</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 20 36 31 14 11 33 34 28 9 32 27 29 16</file>
+          <file> 38 37 21 39 24 14 11 25 42 1 2 6 0 3 27 41 16</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 16 11 32 28 20 36 31 34 33 29 27 14 9</file>
+          <file> 16 11 1 38 24 6 0 3 2 39 37 14 25 21 27 42 41</file>
         </tool>
       </inputs>
     </file>
@@ -159,30 +174,21 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 1</file>
+          <file> 18</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 0</file>
+          <file> 20</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 20 28 2 34 27 4 31 32 5 36 33 29 3 6 40</file>
+          <file> 24 38 29 3 37 28 0 1 27 6 2 39 21 19 9</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 3 28 20 36 31 34 33 29 27 5 32 4 2 40 6</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\Debug\Exe\art-arm.out</name>
-      <inputs>
-        <tool>
-          <name>ILINK</name>
-          <file> 19 21 38 23 0 8 26 30 25 24</file>
+          <file> 21 38 24 6 0 3 2 39 37 27 1 28 29 9 19</file>
         </tool>
       </inputs>
     </file>

@@ -26,6 +26,23 @@ UnspecRange=1
 ActionState=1
 [CodeCoverage]
 Enabled=_ 0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[CallStackLog]
+Enabled=0
+[CallStackStripe]
+ShowTiming=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [InterruptLog]
 LogEnabled=0
 GraphEnabled=0
@@ -57,18 +74,18 @@ Bp11=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo-if-first.c}.54.2" 0 0 1 "" 0 ""
 Bp12=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo-if-first.c}.57.11" 0 0 1 "" 0 ""
 Bp13=_ 0 "STD_CODE2" "{$PROJ_DIR$}.82.1" 0 0 1 "" 0 ""
 Bp14=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo-if-first.c}.42.11" 0 0 1 "" 0 ""
-Bp15=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.55.15" 0 0 1 "" 0 ""
-Bp16=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.56.15" 0 0 1 "" 0 ""
-Bp17=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.58.2" 0 0 1 "" 0 ""
-Bp18=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.59.2" 0 0 1 "" 0 ""
-Bp19=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.60.2" 0 0 1 "" 0 ""
-Bp20=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.62.2" 0 0 1 "" 0 ""
-Bp21=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.63.2" 0 0 1 "" 0 ""
-Bp22=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.66.2" 0 0 1 "" 0 ""
-Bp23=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.39.19" 0 0 1 "" 0 ""
-Bp24=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.34.6" 0 0 1 "" 0 ""
+Bp15=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.53.15" 0 0 1 "" 0 ""
+Bp16=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.54.15" 0 0 1 "" 0 ""
+Bp17=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.56.2" 0 0 1 "" 0 ""
+Bp18=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.57.2" 0 0 1 "" 0 ""
+Bp19=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.58.2" 0 0 1 "" 0 ""
+Bp20=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.60.2" 0 0 1 "" 0 ""
+Bp21=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.61.2" 0 0 1 "" 0 ""
+Bp22=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.64.2" 0 0 1 "" 0 ""
+Bp23=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.37.19" 0 0 1 "" 0 ""
+Bp24=_ 0 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.32.6" 0 0 1 "" 0 ""
 Bp25=_ 0 "STD_CODE2" "{$PROJ_DIR$\..\..\..\Documents\GitHub\HampusDst\DSTList\List.c}.63.2" 0 0 1 "" 0 ""
-Bp26=_ 1 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.49.6" 0 0 1 "" 0 ""
+Bp26=_ 1 "STD_CODE2" "{$PROJ_DIR$\context-demo.c}.47.6" 0 0 1 "" 0 ""
 Count=27
 [Interrupts]
 Enabled=1
@@ -78,26 +95,9 @@ Manual=0
 Ddf=1
 TypeViol=0
 Stop=1
-[DriverProfiling]
-Enabled=0
-Mode=1
-Graph=0
-Symbiont=0
-Exclusions=
 [Trace1]
 Enabled=0
 ShowSource=1
-[CallStackLog]
-Enabled=0
-[CallStackStripe]
-ShowTiming=1
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0

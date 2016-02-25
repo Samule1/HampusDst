@@ -157,4 +157,10 @@ extern void     LoadContext( void );	// Restores DSP registers from TCB pointed 
 extern void     idle(void); 
 extern void     TimerInt (void);
 
+//Mailbox 
+
+extern msg * getFirstFromMailBox(mailbox * mb); 
+extern void insertInMailBox(mailbox * mb, msg * m);
+extern void extractThisMsg(msg * m); 
+
 #endif

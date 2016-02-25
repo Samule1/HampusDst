@@ -2,6 +2,8 @@
 #include "kernel.h"
 #include "kernel_hwdep.h"
 #include <limits.h>
+#include <stdio.h>
+#include <string.h>
 
 /*
                              REMINDERS
@@ -141,6 +143,7 @@ mailbox* create_mailbox( uint nMessages, uint nDataSize ){
   }
   
   mb->pHead->pNext = mb->pTail; 
+  mb->pTail->pPrevious = mb->pHead; 
   return mb; 
 
 }
@@ -219,14 +222,150 @@ void TimerInt (void)
     node = getFirst(waiting_list); 
     message = node->pMessage; 
     
-    /*!Här måste du ändra mailboxcounters och faktiskt tabort meddlandet från mailboxen också!
-      mailboxen är ju också dubbellänkad, fixa detta. 
-    */
-    message->pPrevious->pNext = message->pNext; 
+    extractThisMsg(message); 
     free(message); 
     insertOnTCBDeadLine(node, ready_list); 
     
   }
 }
+/*Ser bra ut, inte testad doc.*/
+msg * getFirstFromMailBox(mailbox * mb){
+  msg * m = mb->pHead->pNext; 
+  mb->pHead->pNext = m->pNext; 
+  mb->pHead->pNext->pPrevious = mb->pHead; 
+  
+  m->pNext = NULL; 
+  m->pPrevious = NULL; 
+  
+  return m; 
+
+}
+void insertInMailBox(mailbox * mb, msg * m){
+  m->pPrevious = mb->pTail->pPrevious; 
+  m->pNext = mb->pTail; 
+  mb->pTail->pPrevious->pNext = m; 
+}
+
+
+void extractThisMsg(msg * m){
+  m->pPrevious->pNext = m->pNext; 
+  m->pNext->pPrevious = m->pPrevious;
+  
+  m->pNext = NULL; 
+  m->pPrevious = NULL; 
+ 
+}
+/*Flyttar vi running i denna?*/
+exception send_wait( mailbox* mBox, void* pData ){
+  //Stäng av interrupt! 
+  bool first = TRUE; 
+  listobj * temp; 
+  listobj * callingTask = ready_list->head->pNext; 
+  msg * message; 
+  SaveContext(); 
+  if(first){
+    first = FALSE; 
+    if(mBox->nMessages < 0){
+      memcpy(mBox->pHead->pNext->pData, pData, sizeof(pData)); 
+      
+      //Remove recivers message from mb 
+      message = getFirstFromMailBox(mBox); 
+      mBox->nMessages++; 
+      mBox->nBlockedMsg++;
+      //Remove from waiting list and insert in ready list
+      temp = freeThis(message->pBlock); 
+      insertOnTCBDeadLine(temp, ready_list); 
+      
+    
+    }
+    else{
+      //Creating a message
+      message = (msg *)calloc(1, sizeof(msg)); 
+      
+      //Check for fail..
+      if(message == NULL){
+        free(message); 
+        return FAIL; 
+      }
+      
+      message->pBlock = ready_list->head->pNext;
+      ready_list->head->pNext->pMessage = message; 
+      memcpy(message->pData, pData, sizeof(pData));
+      
+      //Inseting the message in the mailbox. 
+      insertInMailBox(mBox, message); 
+      mBox->nMessages++; 
+      mBox->nBlockedMsg++;
+      
+      
+      //Moving from ready to waiting
+      temp = getFirst(ready_list); 
+      insertonTCnt(temp, waiting_list); // Kolla om den ska in på NTCNT
+    }
+    LoadContext(); 
+  }  
+  else{
+    if((ticks() - callingTask->nTCnt) >= callingTask->pTask->DeadLine){
+      //Stäng av interrupt!
+      //!gör klart!
+      
+    }
+    else{
+      return OK; 
+    }
+  
+  }
+}
+
+exception receive_wait( mailbox* mBox, void* pData ){
+  //Stäng av interrupt! 
+  bool first = TRUE; 
+  listobj * temp; 
+  listobj * callingTask = ready_list->head->pNext; 
+  msg * message; 
+  SaveContext();
+  if(first){
+    first = FALSE; 
+    if(mBox->nMessages > 0){
+      message = mBox->pHead->pNext; 
+      memcpy(pData, message->pData, sizeof(pData)); 
+      //Fixing the mailbox 
+      extractThisMsg(message);
+      if(mBox->nBlockedMsg > 0){
+        
+        //fixing the mailbox counters. 
+        mBox->nBlockedMsg--; 
+        mBox->nMessages--; 
+        
+        //move to ready list 
+        temp = freeThis(message->pBlock); 
+        insertOnTCBDeadLine(temp, ready_list); 
+        
+      }
+      else{
+        free(message->pData); 
+        mBox->nMessages--; 
+      
+      } 
+    }
+    else{
+        /*
+          Allocate a Message structure
+          Add Message to the Mailbox
+          Move receiving task from Readylist to
+          Waitinglist
+      
+        */
+    }
+  
+  }
+  
+
+
+
+
+}
+
+
 
 
