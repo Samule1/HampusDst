@@ -203,6 +203,30 @@ void set_deadline( uint nDeadline ){
   
 
 }
-
+void TimerInt (void)
+{
+  listobj * node; 
+  msg * message; 
+  tickcounter++; 
+  
+  while(timer_list->head->pNext->nTCnt <= tickcounter){
+    node = getFirst(timer_list); 
+    insertOnTCBDeadLine(node, ready_list);
+  
+  }
+  
+  while(waiting_list->head->pNext->pTask->DeadLine <= tickcounter){
+    node = getFirst(waiting_list); 
+    message = node->pMessage; 
+    
+    /*!Här måste du ändra mailboxcounters och faktiskt tabort meddlandet från mailboxen också!
+      mailboxen är ju också dubbellänkad, fixa detta. 
+    */
+    message->pPrevious->pNext = message->pNext; 
+    free(message); 
+    insertOnTCBDeadLine(node, ready_list); 
+    
+  }
+}
 
 

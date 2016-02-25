@@ -155,5 +155,6 @@ extern void     LoadContext( void );	// Restores DSP registers from TCB pointed 
 //Idle 
 
 extern void     idle(void); 
+extern void     TimerInt (void);
 
 #endif

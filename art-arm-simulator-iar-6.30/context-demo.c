@@ -7,9 +7,7 @@ TCB * Running;
 
 void task1(void);
 
-void TimerInt (void)
-{
-}
+
 
 int main(void)
 {
