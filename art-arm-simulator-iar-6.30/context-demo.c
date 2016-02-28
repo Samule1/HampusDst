@@ -12,40 +12,7 @@ void task1(void);
 int main(void)
 {
   
-  List * ls = ListInitialize();
-  listobj * temp; 
-  
-  int nodeCount = 0; 
-  int nodeCountAgain = 0; 
-     while(1){
-        listobj * node = (listobj *)calloc(1, sizeof(listobj)); 
-        
-        if(node == NULL){
-          break; 
-        }
-        
-        node->nTCnt = 2; 
-        insertonTCnt(node, ls); 
-        nodeCount++;
-     }
-     
-     while(ls->head->pNext != ls->tail){
-       temp = getFirst(ls); 
-       free(temp); 
-     }
-     while(1){
-        listobj * node = (listobj *)calloc(1, sizeof(listobj)); 
-        
-        if(node == NULL){
-          break; 
-        }
-        
-        node->nTCnt = 2; 
-        insertonTCnt(node, ls); 
-        nodeCountAgain++; 
-     }      
-     nodeCountAgain++;
-    
+  //init_kernel();
      
 }   
 void task1(void)
