@@ -19,7 +19,7 @@
 #define rINTPND (*(volatile unsigned*)(0x7ffc004))
 #define rINTMSK (*(volatile unsigned*)(0x7ffc008))
 
-//void Init_IRQ_TINT0(void);
+void Init_IRQ_TINT0(void);
 unsigned int set_isr( unsigned int newCSR );
 extern unsigned int Get_psr(void);
 extern void Set_psr(unsigned int PSR);

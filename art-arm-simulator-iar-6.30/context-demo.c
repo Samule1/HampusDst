@@ -1,33 +1,48 @@
 // main.c
 #include "kernel.h"
 #include "List.h"
+#include <assert.h>
 
 TCB taskA;
-TCB * Running;
+
+mailbox *m; 
 
 void task1(void);
+void task2(void); 
 
-
+unsigned int Get_psr(void){return NULL; }
+void Set_psr(unsigned int PSR){}
 
 int main(void)
 {
   
-  //init_kernel();
+  init_kernel();
+  m = create_mailbox(10, sizeof(char)); 
+  create_task(&task1, 100);
+  create_task(&task2, 200);
+  
+  
+  run(); 
      
 }   
 void task1(void)
 {
-	register int reg_var = 1;
-	volatile int vol_var = 1;
-
-	SaveContext();
-	reg_var++;
-	vol_var++;
-
-	SaveContext();
-	reg_var++;
-	vol_var++;
-
-	LoadContext();
+  char x = 5;
+  //wait(2); 
+  send_wait(m, &x); 
+  x++;
+  
+  terminate(); 
+  
 }
 
+void task2(void)
+{
+  char y; 
+  receive_wait(m, &y); 
+  y++; 
+  terminate(); 
+
+
+
+}

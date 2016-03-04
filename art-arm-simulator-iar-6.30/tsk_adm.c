@@ -18,10 +18,19 @@ Skriv in interrupt disable/enable på de ställen som behövs..
 
 */
 
-
+/*Globals*/
+unsigned int tickcounter;                      // Global tick counter. 
+bool start_up_mode;                            // the kernel is in start-up              
+TCB * Running; bool running_mode;              // the kernel is in running-mode
+List * waiting_list; 
+List * timer_list;
+List * ready_list;
 
 void idle(void){
   while(1){
+   SaveContext(); 
+   TimerInt(); 
+   LoadContext(); 
   
   }
 }
@@ -67,7 +76,7 @@ exception init_kernel(void){
 
 exception create_task(void(*task_body)(), uint deadline){
   
-  int first = TRUE; // Denna ska antagligen inte ligga här sen men.. 
+  volatile int first = TRUE; // Denna ska antagligen inte ligga här sen men.. 
   exception status = OK; 
   listobj * node = (listobj *)calloc(1, sizeof(listobj)); 
   if(node == NULL){
@@ -84,12 +93,13 @@ exception create_task(void(*task_body)(), uint deadline){
   
   task->PC = task_body; 
   task->DeadLine = deadline; 
-  task->SP = task->StackSeg; // Sätter pekaren på sin egen stack. 
+  task->SP = &task->StackSeg[STACK_SIZE-1]; // Sätter pekaren på sin egen stack. 
   
   node->pTask = task; 
   
   if(start_up_mode){
     insertOnTCBDeadLine(node, ready_list); 
+    Running = ready_list->head->pNext->pTask; 
     return status; 
   }
   else{ 
@@ -98,7 +108,7 @@ exception create_task(void(*task_body)(), uint deadline){
     if(first){
       first = FALSE; 
       insertOnTCBDeadLine(node, ready_list);
-      Running = ready_list->head->pTask; 
+      Running = ready_list->head->pNext->pTask;  
     }
   }
   return status; 
@@ -179,9 +189,9 @@ exception remove_mailbox(mailbox* mBox){
 
 
 }
-//TODO
+
 exception wait( uint nTicks ){
-  bool first = TRUE;
+  volatile bool first = TRUE;
   exception status; 
   listobj * temp; 
   SaveContext(); 
@@ -191,6 +201,7 @@ exception wait( uint nTicks ){
     temp = getFirst(ready_list);
     temp->nTCnt = ticks() + nTicks; 
     insertonTCnt(temp, timer_list);
+    Running = ready_list->head->pNext->pTask; 
     LoadContext(); 
   }
   else{
@@ -224,7 +235,7 @@ uint deadline( void ){
 void set_deadline( uint nDeadline ){
   set_isr(ISR_OFF);
   
-  bool first = TRUE; 
+  volatile bool first = TRUE; 
   listobj * node;  
   
   SaveContext();
@@ -248,9 +259,11 @@ void TimerInt (void)
   msg * message; 
   tickcounter++; 
   
-  while(timer_list->head->pNext->nTCnt <= ticks()){
+  
+  while(timer_list->head->pNext->nTCnt <= ticks() && timer_list->head->pNext != timer_list->tail){
     node = getFirst(timer_list); 
     insertOnTCBDeadLine(node, ready_list);
+    Running = ready_list->head->pNext->pTask;
   
   }
   
@@ -261,6 +274,7 @@ void TimerInt (void)
     extractThisMsg(message); 
     free(message); 
     insertOnTCBDeadLine(node, ready_list); 
+    Running = ready_list->head->pNext->pTask; 
     
   }
 }
@@ -294,7 +308,7 @@ void extractThisMsg(msg * m){
 /*Flyttar vi running i denna?*/
 exception send_wait( mailbox* mBox, void* pData ){
   //Stäng av interrupt! 
-  bool first = TRUE; 
+  volatile bool first = TRUE; 
   listobj * temp; 
   msg * message; 
   SaveContext(); 
@@ -338,6 +352,8 @@ exception send_wait( mailbox* mBox, void* pData ){
       //Moving from ready to waiting
       temp = getFirst(ready_list); 
       insertOnTCBDeadLine(temp, waiting_list); // Kolla om den ska in på NTCNT
+      Running = ready_list->head->pNext->pTask;
+      
     }
     
     LoadContext(); 
@@ -365,7 +381,7 @@ exception send_wait( mailbox* mBox, void* pData ){
 
 exception receive_wait( mailbox* mBox, void* pData ){
   //Stäng av interrupt! 
-  bool first = TRUE; 
+  volatile bool first = TRUE; 
   listobj * temp; 
   msg * message; 
   SaveContext();
@@ -387,9 +403,13 @@ exception receive_wait( mailbox* mBox, void* pData ){
         temp = freeThis(message->pBlock); 
         insertOnTCBDeadLine(temp, ready_list); 
         
+        //time to free the msg struct.. 
+        free(message); 
+        
       }
       else{
         free(message->pData); 
+        free(message);
         mBox->nMessages--; 
       
       } 
@@ -444,7 +464,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
 }
 exception send_no_wait( mailbox* mBox, void* pData ){
   //Stäng av interrupt ! 
-  bool first = TRUE;
+  volatile bool first = TRUE;
   listobj * temp; 
   msg * message; 
   SaveContext();
@@ -482,9 +502,9 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       m->pData = pData; 
       
       //if the mailbox is full then.. 
-      if(abs(mBox->nMessages) >= mBox->nMaxMessages){
+      if(mBox->nMessages >= mBox->nMaxMessages){
         //Kopplar bara loss meddelandet så länge..
-        //Hantera brevlådecounter.. 
+        mBox->nMessages--; 
         message = getFirstFromMailBox(mBox); 
         message->pBlock->pMessage = NULL; 
         free(message); 
@@ -508,7 +528,7 @@ exception send_no_wait( mailbox* mBox, void* pData ){
 int receive_no_wait( mailbox* mBox, void* pData ){
   //Stäng av interrupt!
   exception status = FAIL; 
-  bool first = TRUE; 
+  volatile bool first = TRUE; 
   SaveContext(); 
   msg * message; 
   listobj * temp;

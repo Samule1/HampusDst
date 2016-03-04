@@ -47,6 +47,7 @@
       <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
       <file>$TOOLKIT_DIR$\lib\rt4t_al.a</file>
+      <file>$TOOLKIT_DIR$\inc\c\assert.h</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
       <file>$TOOLKIT_DIR$\inc\c\string.h</file>
     </outputs>
@@ -115,11 +116,11 @@
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 37 38 39 16 1 24 2 6 0 3 11</file>
+          <file> 39 38 41 37 0 24 16 1 2 6 3 11</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 11 1 38 24 6 0 3 2 39 37 16</file>
+          <file> 11 1 38 24 6 0 3 2 39 37 16 41</file>
         </tool>
       </inputs>
     </file>
@@ -153,15 +154,19 @@
           <name>BICOMP</name>
           <file> 23</file>
         </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 26</file>
+        </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 24 9 39 21 14 28 38 37 11 25 42 16 1 2 6 0 3 27 41 29</file>
+          <file> 24 9 6 38 0 21 14 28 1 37 11 25 43 2 3 16 39 27 42 29</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 16 11 1 38 24 6 0 3 2 39 37 14 25 21 27 42 41 28 29 9</file>
+          <file> 16 11 1 38 24 6 0 3 2 39 37 14 25 21 27 43 42 28 29 9</file>
         </tool>
       </inputs>
     </file>
