@@ -415,6 +415,9 @@ exception receive_wait( mailbox* mBox, void* pData ){
         free(message->pData); 
         free(message);
         mBox->nMessages--; 
+        
+        //free senders data area.. 
+        
       
       } 
     }
@@ -482,7 +485,8 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       
       //Move the waiting task..
       temp = freeThis(message->pBlock); 
-      insertOnTCBDeadLine(temp, ready_list); 
+      insertOnTCBDeadLine(temp, ready_list);
+      Running = ready_list->head->pNext->pTask; 
       
       //Fix counters and destroy the waiting message 
       message->pBlock->pMessage = NULL; 
@@ -501,20 +505,20 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       m->pBlock = ready_list->head->pNext;
       ready_list->head->pNext->pMessage = m; 
       
+      // updating the counter
+      mBox->nMessages++; 
+      
       
       //copy data to the message.. 
       m->pData = pData; 
       
       //if the mailbox is full then.. 
       if(mBox->nMessages >= mBox->nMaxMessages){
-        //Kopplar bara loss meddelandet så länge..
+       
         mBox->nMessages--; 
         message = getFirstFromMailBox(mBox); 
         message->pBlock->pMessage = NULL; 
         free(message); 
-        
-        // Känns som vi behöver hantera detta bättre??
-        
         
       }
       // Inserting the new message.. 

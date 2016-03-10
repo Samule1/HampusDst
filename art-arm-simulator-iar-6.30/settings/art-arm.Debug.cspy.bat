@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "C:\Users\Hampus\Desktop\art-arm-simulator-iar-6.30\settings\art-arm.Debug.general.xcl" --backend -f "C:\Users\Hampus\Desktop\art-arm-simulator-iar-6.30\settings\art-arm.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "C:\Users\Hampus\Documents\GitHub\HampusDst\art-arm-simulator-iar-6.30\settings\art-arm.Debug.general.xcl" --backend -f "C:\Users\Hampus\Documents\GitHub\HampusDst\art-arm-simulator-iar-6.30\settings\art-arm.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "C:\Users\Hampus\Desktop\art-arm-simulator-iar-6.30\settings\art-arm.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\Hampus\Desktop\art-arm-simulator-iar-6.30\settings\art-arm.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "C:\Users\Hampus\Documents\GitHub\HampusDst\art-arm-simulator-iar-6.30\settings\art-arm.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\Hampus\Documents\GitHub\HampusDst\art-arm-simulator-iar-6.30\settings\art-arm.Debug.driver.xcl" 
 
 @echo off 
 :end

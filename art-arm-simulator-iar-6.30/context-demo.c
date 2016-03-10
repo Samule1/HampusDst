@@ -11,6 +11,7 @@ mailbox *m;
 
 void Simple_send_wait(void); 
 void Simple_recive_wait(void);
+void Three_time_recive_wait(void); 
 void MainTestSW(void);
 
 exception condition_check();
@@ -69,6 +70,30 @@ void sw_deadline_fail(void)
   terminate(); 
 }
 
+void Three_time_recive_wait(void){
+  
+  exception status; 
+  char a; 
+  char b; 
+  char c; 
+  
+  receive_wait(m, &a);
+  if(a != 1){
+    status = FAIL;
+  }
+  receive_wait(m, &b); 
+  if(b != 2){
+    status = FAIL;
+  }
+  receive_wait(m, &c);
+  if(c != 3){
+    status = FAIL;
+  }
+  
+  terminate(); 
+}
+
+
 
 
 void MainTestSW(void){
@@ -108,7 +133,7 @@ void MainTestSW(void){
   }
   
 /*===========================================================================*/
-  
+  //This is the simple send one, wait, receive 
   create_task(&Simple_send_wait, (ticks()+10)); 
   
   if(length_of_list(waiting_list) != 1){
@@ -137,6 +162,96 @@ void MainTestSW(void){
     status = FAIL; 
   } 
   
+/*===========================================================================*/
+  //Let's do some fast messageing, shall we?
+  
+  char x,y,z;
+  create_task(&Three_time_recive_wait, (ticks()+10)); 
+  
+  x = 1; 
+  y = 2; 
+  z = 3; 
+  
+  send_no_wait(m, &x);
+  send_no_wait(m, &y);
+  send_no_wait(m, &z);
+  
+  if(x == NULL){
+    status = FAIL; 
+  }
+  
+  if(y == NULL){
+    status = FAIL; 
+  }
+  
+  if(z == NULL){
+    status = FAIL; 
+  }
+  
+/*===========================================================================*/ 
+     //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  //Let's do some rapid messaging between tasks with send- receive_no_wait 
+  char a,b,c,d,e,A,B,C,D,E;
+  
+  a = 1; 
+  b = 2; 
+  c = 3; 
+  d = 4; 
+  e = 5; 
+  
+  send_no_wait(m, &a);
+  send_no_wait(m, &b);
+  send_no_wait(m, &c);
+  send_no_wait(m, &d);
+  send_no_wait(m, &e); 
+  
+  if(mailbox_status_compare(m, 0, 5, !EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+    
+  receive_no_wait(m, &A);
+  
+  if(A != 1 && a !=NULL){
+    status = FAIL; 
+  }
+  receive_no_wait(m, &B);
+  
+  if(B != 2 && b !=NULL){
+    status = FAIL; 
+  }
+  receive_no_wait(m, &C);
+  if(C != 3 && c !=NULL){
+    status = FAIL; 
+  }
+  receive_no_wait(m, &D);
+  
+  if(D != 4 && d !=NULL){
+    status = FAIL; 
+  }
+  receive_no_wait(m, &E);
+  
+  if(E != 5 && e !=NULL){
+    status = FAIL; 
+  }
+  
+/*===========================================================================*/
+     //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
   
   terminate(); 
 
