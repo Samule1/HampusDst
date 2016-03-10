@@ -108,7 +108,8 @@ exception create_task(void(*task_body)(), uint deadline){
     if(first){
       first = FALSE; 
       insertOnTCBDeadLine(node, ready_list);
-      Running = ready_list->head->pNext->pTask;  
+      Running = ready_list->head->pNext->pTask;
+      LoadContext(); 
     }
   }
   return status; 
@@ -405,6 +406,9 @@ exception receive_wait( mailbox* mBox, void* pData ){
         
         //time to free the msg struct.. 
         free(message); 
+        
+        //Running pointer! 
+        Running = ready_list->head->pNext->pTask; 
         
       }
       else{
