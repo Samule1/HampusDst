@@ -317,7 +317,7 @@ exception send_wait( mailbox* mBox, void* pData ){
   if(first){
     first = FALSE; 
     if(mBox->nMessages < 0){
-      memcpy(mBox->pHead->pNext->pData, pData, sizeof(pData)); 
+      memcpy(mBox->pHead->pNext->pData, pData, mBox->nDataSize); // Ändrar från sixe of pData 
       
       //Remove recivers message from mb 
       message = getFirstFromMailBox(mBox); 
@@ -392,7 +392,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
     if(mBox->nMessages > 0){
       
       message = getFirstFromMailBox(mBox); 
-      memcpy(pData, message->pData, sizeof(pData)); 
+      memcpy(pData, message->pData, mBox->nDataSize); // Ändrar från sixe of pData
       
       
       if(mBox->nBlockedMsg > 0){
@@ -482,7 +482,7 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       
       //Copy data..
       message = getFirstFromMailBox(mBox); 
-      memcpy(message->pData, pData, sizeof(pData)); 
+      memcpy(message->pData, pData, mBox->nDataSize); // Ändrar från sixe of pData
       
       //Move the waiting task..
       temp = freeThis(message->pBlock); 
@@ -508,10 +508,20 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       
       // updating the counter
       mBox->nMessages++; 
+      /*
+        allokera en ny pekare kör en memcpy från pData till ny pekare, 
+        sätt m->pData = ny pekare.. 
+      
+      */
+      
+      void * temp = calloc(1, sizeof(mBox->nDataSize)); 
+      if(temp == NULL){ free(m);  return FAIL;  }
+      memcpy(temp, pData, sizeof(mBox->nDataSize)); 
+      
       
       
       //copy data to the message.. 
-      m->pData = pData; 
+      m->pData = temp; // m->pData = pData; 
       
       //if the mailbox is full then.. 
       if(mBox->nMessages >= mBox->nMaxMessages){
@@ -553,7 +563,7 @@ int receive_no_wait( mailbox* mBox, void* pData ){
       /*Coping the the senders data to the 
       recivers data area...*/
       message = getFirstFromMailBox(mBox); 
-      memcpy(pData, message->pData, sizeof(char)); //Ändrar från sizeof(pData)
+      memcpy(pData, message->pData, mBox->nDataSize); //Ändrar från sizeof(pData)
       
       mBox->nMessages--; 
       
@@ -576,7 +586,7 @@ int receive_no_wait( mailbox* mBox, void* pData ){
         /*Freeing the senders data area and destroying 
         the message*/
         
-        //free(message->pData); 
+        free(message->pData); 
         free(message); 
       
       }
