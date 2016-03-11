@@ -292,9 +292,10 @@ msg * getFirstFromMailBox(mailbox * mb){
 
 }
 void insertInMailBox(mailbox * mb, msg * m){
+  mb->pTail->pPrevious->pNext = m; 
   m->pPrevious = mb->pTail->pPrevious; 
   m->pNext = mb->pTail; 
-  mb->pTail->pPrevious->pNext = m; 
+  mb->pTail->pPrevious = m;
 }
 
 
@@ -552,7 +553,7 @@ int receive_no_wait( mailbox* mBox, void* pData ){
       /*Coping the the senders data to the 
       recivers data area...*/
       message = getFirstFromMailBox(mBox); 
-      memcpy(pData, message->pData, sizeof(pData));
+      memcpy(pData, message->pData, sizeof(char)); //Ändrar från sizeof(pData)
       
       mBox->nMessages--; 
       
@@ -575,7 +576,7 @@ int receive_no_wait( mailbox* mBox, void* pData ){
         /*Freeing the senders data area and destroying 
         the message*/
         
-        free(message->pData); 
+        //free(message->pData); 
         free(message); 
       
       }

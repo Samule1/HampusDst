@@ -14,6 +14,7 @@ void Simple_recive_wait(void);
 void Three_time_recive_wait(void); 
 void MainTestSW(void);
 
+
 exception condition_check();
 bool list_is_empty(List* ls);
 int length_of_list(List* ls); 
@@ -30,7 +31,8 @@ int main(void)
 
   
   m = create_mailbox(10, sizeof(char)); 
-  create_task(&MainTestSW, 10000);  
+  create_task(&MainTestSW, 10000);
+
   run(); 
      
 } 
@@ -43,6 +45,7 @@ void Simple_send_wait(void){
   
 
 }
+
 void Simple_recive_wait(void){
   
   exception status = OK; 
@@ -93,12 +96,13 @@ void Three_time_recive_wait(void){
   terminate(); 
 }
 
-
+//för compile
 
 
 void MainTestSW(void){
   
   exception status = OK; 
+  
 /*===========================================================================*/ 
   
   //creating task to test a deadline fail.. 
@@ -196,7 +200,7 @@ void MainTestSW(void){
   if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
     status = FAIL; 
   } 
-  
+ 
 /*===========================================================================*/
   //Let's do some rapid messaging between tasks with send- receive_no_wait 
   char a,b,c,d,e,A,B,C,D,E;
@@ -219,26 +223,26 @@ void MainTestSW(void){
     
   receive_no_wait(m, &A);
   
-  if(A != 1 && a !=NULL){
+  if(A != 1){
     status = FAIL; 
   }
   receive_no_wait(m, &B);
   
-  if(B != 2 && b !=NULL){
+  if(B != 2){
     status = FAIL; 
   }
   receive_no_wait(m, &C);
-  if(C != 3 && c !=NULL){
+  if(C != 3){
     status = FAIL; 
   }
   receive_no_wait(m, &D);
   
-  if(D != 4 && d !=NULL){
+  if(D != 4){
     status = FAIL; 
   }
   receive_no_wait(m, &E);
   
-  if(E != 5 && e !=NULL){
+  if(E != 5){
     status = FAIL; 
   }
   
