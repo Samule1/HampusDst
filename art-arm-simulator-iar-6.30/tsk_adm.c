@@ -519,7 +519,7 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       m->pData = temp; // m->pData = pData; 
       
       //if the mailbox is full then.. 
-      if(mBox->nMessages >= mBox->nMaxMessages){
+      if(mBox->nMessages > mBox->nMaxMessages){
        
         mBox->nMessages--; 
         message = getFirstFromMailBox(mBox); 

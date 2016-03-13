@@ -8,6 +8,7 @@
 TCB taskA;
 
 mailbox *m; 
+mailbox *fullbox; 
 
 void Simple_send_wait(void); 
 void Simple_recive_wait(void);
@@ -418,12 +419,74 @@ void MainTestSW(void){
   } 
   
 /*===========================================================================*/
+  //Testing adding message to a full mailbox. 
   
+  //A new mailbox, just for this test. 
+  fullbox = create_mailbox(3, sizeof(char)); 
+  
+  //Check the status of the new mailbox. 
+  if(mailbox_status_compare(fullbox, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+  a = 1; 
+  b = 2; 
+  c = 3;
+  d = 4; 
+  
+  A = B = C = 0; 
+  
+  send_no_wait(fullbox, &a);
+  send_no_wait(fullbox, &b);
+  send_no_wait(fullbox, &c);
+  
+  //Checking the mailbox state. 
+  if(mailbox_status_compare(fullbox, 0, 3, !EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+  //Overfull mailbox after this send action. 
+  send_no_wait(fullbox, &d);
+  
+  //Checking the mailbox state. 
+  if(mailbox_status_compare(fullbox, 0, 3, !EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  }
+  
+  //fetching the messages. 
+  receive_no_wait(fullbox, &A);
+  receive_no_wait(fullbox, &B);
+  receive_no_wait(fullbox, &C);
+  
+  if(A != 2){
+    status = FAIL; 
+  }
+  if(B != 3){
+    status = FAIL; 
+  }
+  if(C != 4){
+    status = FAIL; 
+  }
+  
+  //Final check of the mailbox state. 
+  if(mailbox_status_compare(fullbox, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  }
+
+/*===========================================================================*/
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/  
   
   
 //Add interrupts.. 
 //My calloc 
-//full mailbox tests. 
   
   terminate(); 
 
