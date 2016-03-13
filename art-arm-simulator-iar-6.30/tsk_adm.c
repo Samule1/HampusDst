@@ -232,7 +232,7 @@ uint deadline( void ){
   return Running->DeadLine; 
 
 }
-//Kolla igenom detta, tror du är lite trött.. 
+
 void set_deadline( uint nDeadline ){
   set_isr(ISR_OFF);
   

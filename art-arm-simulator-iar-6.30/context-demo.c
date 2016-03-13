@@ -14,6 +14,8 @@ void Simple_recive_wait(void);
 void Three_time_recive_wait(void); 
 void sw_deadline_fail(void);
 void rw_deadline_fail(void);
+void wait_til_break_dl10(void);
+void deadline_change_receive(void); 
 void MainTestSW(void);
 
 
@@ -38,6 +40,36 @@ int main(void)
   run(); 
      
 } 
+
+void deadline_change_receive(void){
+  exception status = OK; 
+  char giveMeSeven; 
+  create_task(&Simple_send_wait, (deadline()+1));
+  set_deadline((deadline()+5));
+  
+  receive_no_wait(m, &giveMeSeven); 
+  if(giveMeSeven != 7){
+    status = FAIL; 
+  }
+  
+  terminate(); 
+  
+
+}
+
+void wait_til_break_dl10(void){
+  exception e;
+  exception status = OK; 
+  e = wait(11); 
+  
+  if(e != DEADLINE_REACHED){
+    
+      status = FAIL;
+  }
+  
+  terminate(); 
+
+}
 
 void Simple_send_wait(void){
   char n = 7; 
@@ -74,6 +106,7 @@ void sw_deadline_fail(void)
   
   terminate(); 
 }
+
 
 void rw_deadline_fail(void){
   exception e; 
@@ -336,12 +369,58 @@ void MainTestSW(void){
   } 
   
 /*===========================================================================*/  
+  //send no wait -> picked up by receive_wait
   
-
+  create_task(&Simple_recive_wait, (ticks() + 3)); 
+  a = 7; 
+  send_no_wait(m, &a); 
   
-//recive_wait_deadline fail.  
-//send no wait -> picked up by receive_wait
-//Test timing functions 
+/*===========================================================================*/
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+    //Putting a task into the timing list and letting it expire.. 
+  create_task(&wait_til_break_dl10, (ticks() + 10)); 
+  
+  //Putting main thread to sleep here so it wont terminate first. 
+  wait(15); 
+  
+/*===========================================================================*/
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  //changing deadlines in run time, two tasks are created, the first one 
+  //with the lowest deadline will reschedule it self and next time it is running
+  //a receive no wait will be performed.
+  create_task(&deadline_change_receive, (ticks() + 10)); 
+  
+  
+  
+/*===========================================================================*/
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  
+  
+  
 //Add interrupts.. 
 //My calloc 
 //full mailbox tests. 
