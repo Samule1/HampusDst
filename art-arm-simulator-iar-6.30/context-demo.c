@@ -12,6 +12,8 @@ mailbox *m;
 void Simple_send_wait(void); 
 void Simple_recive_wait(void);
 void Three_time_recive_wait(void); 
+void sw_deadline_fail(void);
+void rw_deadline_fail(void);
 void MainTestSW(void);
 
 
@@ -71,6 +73,17 @@ void sw_deadline_fail(void)
   }
   
   terminate(); 
+}
+
+void rw_deadline_fail(void){
+  exception e; 
+  char x; 
+  e = receive_wait(m, &x); 
+  if(e != DEADLINE_REACHED){
+    x = x; 
+  }
+  terminate(); 
+
 }
 
 void Three_time_recive_wait(void){
@@ -256,6 +269,82 @@ void MainTestSW(void){
   } 
   
 /*===========================================================================*/
+  // Doing some receive no wait with empty mailbox 
+  
+  //just checking the state of this local one.  
+  if(a != 1){
+    status = FAIL; 
+  }
+  
+  //Nothing should happen here.. 
+  receive_no_wait(m, &a);
+/*===========================================================================*/
+  
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  //receive_no_wait is now to be tested on send_wait msg. 
+  
+  //Creating the send_wait task.
+  create_task(&Simple_send_wait, (ticks()+10));
+  
+  //Now let's fetch that seven 
+  receive_no_wait(m, &a); 
+  
+  if(a != 7){
+    status = FAIL; 
+  }
+  
+  //reseting the a to one.
+  a = 1; 
+
+/*===========================================================================*/
+  
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  // Testing case: recieve wait deadline fail. 
+  create_task(&rw_deadline_fail, (ticks() + 3)); 
+  
+  if(length_of_list(waiting_list) != 1){
+    status = FAIL; 
+  }
+  
+  wait(4); 
+  
+  
+/*===========================================================================*/
+
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/  
+  
+
+  
+//recive_wait_deadline fail.  
+//send no wait -> picked up by receive_wait
+//Test timing functions 
+//Add interrupts.. 
+//My calloc 
+//full mailbox tests. 
   
   terminate(); 
 

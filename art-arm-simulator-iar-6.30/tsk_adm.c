@@ -454,7 +454,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
       message = ready_list->head->pNext->pMessage;
       extractThisMsg(message); 
       mBox->nMessages++; 
-      mBox->nMessages++; 
+      mBox->nBlockedMsg++;  
       
       //Tror vi kan tabort meddelandet här.
       ready_list->head->pNext->pMessage = NULL; // eller?
@@ -508,11 +508,6 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       
       // updating the counter
       mBox->nMessages++; 
-      /*
-        allokera en ny pekare kör en memcpy från pData till ny pekare, 
-        sätt m->pData = ny pekare.. 
-      
-      */
       
       void * temp = calloc(1, sizeof(mBox->nDataSize)); 
       if(temp == NULL){ free(m);  return FAIL;  }
