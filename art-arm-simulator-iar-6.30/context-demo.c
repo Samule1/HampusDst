@@ -17,6 +17,7 @@ void sw_deadline_fail(void);
 void rw_deadline_fail(void);
 void wait_til_break_dl10(void);
 void deadline_change_receive(void); 
+void send_nw_then_terminate(void);
 void MainTestSW(void);
 
 
@@ -143,7 +144,12 @@ void Three_time_recive_wait(void){
   terminate(); 
 }
 
-//för compile
+void send_nw_then_terminate(void){
+  char send = 1; 
+  send_no_wait(m, &send); 
+  terminate(); 
+
+}
 
 
 void MainTestSW(void){
@@ -482,7 +488,57 @@ void MainTestSW(void){
     status = FAIL; 
   } 
   
+/*===========================================================================*/
+  // Send no wait picked up be receieve wait. 
+  
+  a = 7; 
+  send_no_wait(m, &a);
+  create_task(&Simple_recive_wait, (ticks()+5));
+  if(a != 7){
+    status = FAIL; 
+  }
+  
 /*===========================================================================*/  
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  //Receive wait then send wait. 
+  create_task(&Simple_recive_wait, (ticks()+5));
+  create_task(&Simple_send_wait, (ticks()+5)); 
+  
+  
+/*===========================================================================*/ 
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
+  char giveMeOne; 
+  create_task(&send_nw_then_terminate, (ticks()+5)); 
+  receive_no_wait(m, &giveMeOne); 
+  if(giveMeOne != 1){
+    status = FAIL; 
+  }
+/*===========================================================================*/
+  //After we complete a section we check the state of the system.. 
+  if(condition_check(2) != OK){
+    status = FAIL;
+  }
+  if(mailbox_status_compare(m, 0, 0, EXPECTING_EMPTY) != OK){
+    status = FAIL; 
+  } 
+  
+/*===========================================================================*/
   
   
 //Add interrupts.. 

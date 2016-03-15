@@ -307,7 +307,7 @@ void extractThisMsg(msg * m){
   m->pPrevious = NULL; 
  
 }
-/*Flyttar vi running i denna?*/
+
 exception send_wait( mailbox* mBox, void* pData ){
   //Stäng av interrupt! 
   volatile bool first = TRUE; 

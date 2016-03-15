@@ -139,7 +139,7 @@
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 27 43 28 29 42 8 19 0 1 41 14 32</file>
+          <file> 8 1 28 0 42 19 43 29 27 41 14 32</file>
         </tool>
         <tool>
           <name>ICCARM</name>
