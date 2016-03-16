@@ -76,15 +76,22 @@ exception init_kernel(void){
 
 exception create_task(void(*task_body)(), uint deadline){
   
-  volatile int first = TRUE; // Denna ska antagligen inte ligga här sen men.. 
+  volatile int first = TRUE;  
   exception status = OK; 
-  listobj * node = (listobj *)calloc(1, sizeof(listobj)); 
+  
+  int prevISR = set_isr(ISR_OFF); //FOR CALLOCS.
+  listobj * node = (listobj *)calloc(1, sizeof(listobj));
+  set_isr(prevISR);
+  
   if(node == NULL){
     status = FAIL; 
     free(node); 
   }
   
+  prevISR = set_isr(ISR_OFF);
   TCB * task = (TCB*)calloc(1, (sizeof(TCB)));
+  set_isr(prevISR);
+  
   if(task == NULL){
     status = FAIL; 
     free(node); 
@@ -134,10 +141,10 @@ void run(void){
   terminera "the running task" så freeFirst ska kunna funka ganska bra här.. 
 */
 void terminate(void){
-  //Här kan man tänka sig en check för idle.. 
+   
   listobj * node = getFirst(ready_list);
   
-  //OM mailbox är kopplad hit så bör vi rimligen köra en free på den också...  
+    
   free(node->pTask); 
   free(node); 
   
@@ -150,16 +157,22 @@ void terminate(void){
 
 mailbox* create_mailbox( uint nMessages, uint nDataSize ){
   
+  int prevISR = set_isr(ISR_OFF);
   mailbox * mb = (mailbox *)calloc(1, sizeof(mailbox)); 
+  set_isr(prevISR);
   if(mb == NULL){
     free(mb); 
+    
     return NULL; 
   }
   mb->nDataSize = nDataSize; 
   mb->nMaxMessages = nMessages; 
   
+  prevISR = set_isr(ISR_OFF);
   mb->pHead = (msg *)calloc(1, sizeof(msg)); 
-  mb->pTail = (msg *)calloc(1, sizeof(msg)); 
+  mb->pTail = (msg *)calloc(1, sizeof(msg));
+  set_isr(prevISR); 
+  
   if(mb->pHead == NULL || mb->pTail == NULL){
      free(mb->pHead); 
      free(mb->pTail); 
@@ -192,6 +205,7 @@ exception remove_mailbox(mailbox* mBox){
 }
 
 exception wait( uint nTicks ){
+  int prevISR = set_isr(ISR_OFF);
   volatile bool first = TRUE;
   exception status; 
   listobj * temp; 
@@ -309,7 +323,7 @@ void extractThisMsg(msg * m){
 }
 
 exception send_wait( mailbox* mBox, void* pData ){
-  //Stäng av interrupt! 
+  int prevISR = set_isr(ISR_OFF);
   volatile bool first = TRUE; 
   listobj * temp; 
   msg * message; 
@@ -362,7 +376,8 @@ exception send_wait( mailbox* mBox, void* pData ){
   }  
   else{
     if(ticks() >= Running->DeadLine){
-      //Stäng av interrupt!
+      prevISR = set_isr(ISR_OFF);
+      
       message = ready_list->head->pNext->pMessage; 
       extractThisMsg(message);  // Rimligen är detta det första meddelandet i lådan 
       mBox->nBlockedMsg--;      //Ska vi räkna ner båda här?
@@ -370,7 +385,7 @@ exception send_wait( mailbox* mBox, void* pData ){
       ready_list->head->pNext->pMessage = NULL; 
       free(message); 
       
-      //Toggle interrupt
+      set_isr(prevISR);
       return DEADLINE_REACHED; 
       
     }
@@ -382,7 +397,7 @@ exception send_wait( mailbox* mBox, void* pData ){
 }
 
 exception receive_wait( mailbox* mBox, void* pData ){
-  //Stäng av interrupt! 
+  int prevISR = set_isr(ISR_OFF); 
   volatile bool first = TRUE; 
   listobj * temp; 
   msg * message; 
@@ -450,7 +465,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
   }
   else{
     if(ticks() >= Running->DeadLine){
-      //Stäng av interrupt
+      prevISR = set_isr(ISR_OFF);
       message = ready_list->head->pNext->pMessage;
       extractThisMsg(message); 
       mBox->nMessages++; 
@@ -459,7 +474,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
       //Tror vi kan tabort meddelandet här.
       ready_list->head->pNext->pMessage = NULL; // eller?
       free(message);
-      
+      set_isr(prevISR);
       return DEADLINE_REACHED; 
     }
     else{
@@ -471,7 +486,7 @@ exception receive_wait( mailbox* mBox, void* pData ){
   }
 }
 exception send_no_wait( mailbox* mBox, void* pData ){
-  //Stäng av interrupt ! 
+  int prevISR = set_isr(ISR_OFF); 
   volatile bool first = TRUE;
   listobj * temp; 
   msg * message; 
@@ -498,9 +513,12 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       LoadContext(); 
     }
     else{
+      prevISR = set_isr(ISR_OFF);
       msg * m = (msg*)calloc(1, sizeof(msg)); 
+      set_isr(prevISR);
       if(m == NULL){
-        free(m); 
+        free(m);
+        
         return FAIL; 
       }
       m->pBlock = ready_list->head->pNext;
@@ -509,8 +527,11 @@ exception send_no_wait( mailbox* mBox, void* pData ){
       // updating the counter
       mBox->nMessages++; 
       
+      prevISR = set_isr(ISR_OFF);
       void * temp = calloc(1, sizeof(mBox->nDataSize)); 
-      if(temp == NULL){ free(m);  return FAIL;  }
+      set_isr(prevISR);
+      
+      if(temp == NULL){ free(m); return FAIL;  }
       memcpy(temp, pData, sizeof(mBox->nDataSize)); 
       
       
@@ -540,7 +561,7 @@ exception send_no_wait( mailbox* mBox, void* pData ){
 }
 
 int receive_no_wait( mailbox* mBox, void* pData ){
-  //Stäng av interrupt!
+  int prevISR = set_isr(ISR_OFF);
   exception status = FAIL; 
   volatile bool first = TRUE; 
   SaveContext(); 
